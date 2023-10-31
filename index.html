@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Example</title>
+</head>
+<body>
+<h1>Submit Data to API</h1>
+
+<form id="dataForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"><br><br>
+
+    <button type="button" onclick="submitData()">Submit</button>
+</form>
+
+<div id="apiResponse"></div>
+
+<script>
+    function sendDataToAPI(data) {
+        const apiUrl = 'https://restapi.tu.ac.th/api/v1/auth/Ad/verify2';
+
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Application-Key': 'TUdbeff28915d52c5e941e2d33d9dbf99fca880145b3251d08036ba094a973b49881a67aed4333ceb3f2317a8895438670', // Your API key here
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(responseData => {
+            if (responseData.status && responseData.type === "student") {
+                window.location.href = 'form.html';
+            } else {
+                document.getElementById('apiResponse').innerHTML = 'Not Found or Misinput';
+            }
+        })
+        .catch(error => {
+            console.error('Error when calling API:', error);
+            document.getElementById('apiResponse').innerHTML = 'Error when calling API';
+        });
+    }
+
+    function submitData() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        const data = {
+            "UserName": username,
+            "PassWord": password
+        };
+
+        sendDataToAPI(data);
+    }
+</script>
+</body>
+</html>
